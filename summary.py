@@ -2,7 +2,8 @@ import http.server
 import time
 from prometheus_client import start_http_server, Summary
 
-REQUEST_RESPOND_TIME = Summary('app_response_latency_seconds', 'Response latency in seconds')
+REQUEST_RESPOND = Summary('app_response_latency_seconds', 'Response latency in seconds', ('method', 'endpoint'))
+REQUEST_RESPOND_TIME = REQUEST_RESPOND.labels('GET', '/trade/')
 
 APP_PORT = 8000
 METRICS_PORT = 8001
@@ -12,7 +13,7 @@ class HandleRequests(http.server.BaseHTTPRequestHandler):
     @REQUEST_RESPOND_TIME.time()
     def do_GET(self):
         #start_time = time.time()
-        time.sleep(6)
+        time.sleep(5)
         self.send_response(200)
         self.send_header("Content-type", "text/html")
         self.end_headers()
